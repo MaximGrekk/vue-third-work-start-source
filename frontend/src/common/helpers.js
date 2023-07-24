@@ -27,3 +27,33 @@ export const normalizeTask = (task) => {
     timeStatus: getTimeStatus(task.dueDate),
   };
 };
+
+export const getImage = (image) => {
+  // https://vitejs.dev/guide/assets.html#new-url-url-import-meta-url
+  return new URL(`../assets/img/${image}`, import.meta.url).href;
+};
+
+import { toRaw } from "vue";
+
+export const getTargetColumnTasks = (toColumnId, tasks) => {
+  return tasks
+    .filter((task) => task.columnId === toColumnId)
+    .map((task) => toRaw(task));
+};
+
+export const addActive = (active, toTask, tasks) => {
+  const activeIndex = tasks.findIndex((task) => task.id === active.id);
+  if (~activeIndex) {
+    tasks.splice(activeIndex, 1);
+  }
+
+  tasks.sort((a, b) => a.sortOrder - b.sortOrder);
+
+  if (toTask) {
+    const toTaskIndex = tasks.findIndex((task) => task.id === toTask.id);
+    tasks.splice(toTaskIndex, 0, active);
+  } else {
+    tasks.push(active);
+  }
+  return tasks;
+};
