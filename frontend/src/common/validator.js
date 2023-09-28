@@ -29,6 +29,9 @@ const rules = {
   },
 };
 
+// value — строка для проверки;
+// appliedRules — массив имён правил валидации.
+
 const validate = (value, appliedRules) => {
   let error = "";
   appliedRules.forEach((appliedRule) => {
@@ -42,6 +45,9 @@ const validate = (value, appliedRules) => {
   });
   return error;
 };
+
+// fields — объект с полями для валидации, например { myText: 'abc', myEmail: 'email@example.com' }.
+// validations — объект с правилами валидаций.
 
 export const validateFields = (fields, validations) => {
   let isValid = true;

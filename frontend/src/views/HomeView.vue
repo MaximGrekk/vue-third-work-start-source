@@ -1,7 +1,12 @@
 <template>
   <main class="content">
     <section class="desk">
-      <router-view :tasks="props.tasks" />
+      <router-view
+        :tasks="props.tasks"
+        @add-task="$emit('addTask', $event)"
+        @edit-task="$emit('editTask', $event)"
+        @delete-task="$emit('deleteTask', $event)"
+      />
       <!--      Шапка доски-->
       <div class="desk__header">
         <h1 class="desk__title">Design Coffee Lab</h1>
