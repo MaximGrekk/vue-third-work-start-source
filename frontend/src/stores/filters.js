@@ -1,11 +1,20 @@
-import { createStore } from "pinia";
+import { defineStore } from "pinia";
 
-export const useFiltersStore = createStore("filters", {
+export const useFiltersStore = defineStore("filters", {
   state: () => ({
     search: "",
     users: [],
     statuses: [],
   }),
-  getters: {},
+  getters: {
+    filters: (state) => {
+      const { search, users, statuses } = state;
+      return {
+        search,
+        users,
+        statuses,
+      };
+    },
+  },
   actions: {},
 });
