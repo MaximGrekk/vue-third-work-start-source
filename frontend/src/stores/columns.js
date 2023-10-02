@@ -1,7 +1,9 @@
 import { createStore } from "pinia";
 
 export const useColumnsStore = createStore("columns", {
-  state: () => ({}),
+  state: () => ({
+    columns: [],
+  }),
   getters: {},
   actions: {},
 });

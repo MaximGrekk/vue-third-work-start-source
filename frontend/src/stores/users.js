@@ -1,7 +1,9 @@
 import { createStore } from "pinia";
 
 export const useUsersStore = createStore("users", {
-  state: () => ({}),
+  state: () => ({
+    users: [],
+  }),
   getters: {},
   actions: {},
 });

@@ -1,7 +1,11 @@
 import { createStore } from "pinia";
 
 export const useFiltersStore = createStore("filters", {
-  state: () => ({}),
+  state: () => ({
+    search: "",
+    users: [],
+    statuses: [],
+  }),
   getters: {},
   actions: {},
 });
