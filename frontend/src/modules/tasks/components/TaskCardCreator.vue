@@ -166,6 +166,9 @@ import { createUUIDv4, createNewDate } from "@/common/helpers";
 import AppButton from "@/common/components/AppButton.vue";
 import { validateFields } from "@/common/validator";
 import { cloneDeep } from "lodash";
+import { useTasksStore } from "@/stores/tasks";
+
+const tasksStore = useTasksStore();
 
 const props = defineProps({
   taskToEdit: {
@@ -173,8 +176,6 @@ const props = defineProps({
     default: null,
   },
 });
-
-const emits = defineEmits(["addTask", "editTask", "deleteTask"]);
 
 const router = useRouter();
 const dialog = ref(null);
@@ -240,7 +241,7 @@ function removeTick({ uuid, id }) {
 }
 
 function deleteTask() {
-  emits("deleteTask", task.value.id);
+  tasksStore.deleteTask(task.value.id);
   router.push("/");
 }
 
@@ -262,10 +263,10 @@ function submit() {
   }
   if (props.taskToEdit) {
     // Редактируемая задача
-    emits("editTask", task.value);
+    tasksStore.editTask(task.value);
   } else {
     // Новая задача
-    emits("addTask", task.value);
+    tasksStore.addTask(task.value);
   }
   // Переход на главную страницу
   router.push("/");
