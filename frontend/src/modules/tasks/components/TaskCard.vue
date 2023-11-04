@@ -8,7 +8,7 @@
         <div v-if="task.user" class="task__user">
           <div class="task__avatar">
             <img
-              :src="getImage(task.user.avatar)"
+              :src="getPublicImage(taskUser.avatar)"
               alt="Аватар пользователя"
               width="20"
               height="20"
@@ -46,12 +46,12 @@
 import AppDrag from "@/common/components/AppDrag.vue";
 import AppDrop from "@/common/components/AppDrop.vue";
 import TaskCardTags from "./TaskCardTags.vue";
-import { getImage } from "@/common/helpers";
 import { useRouter } from "vue-router";
+import { getPublicImage } from "@/common/helpers";
+import { useUsersStore } from "@/stores";
+import { computed } from "vue";
 
-const router = useRouter();
-
-defineProps({
+const props = defineProps({
   task: {
     type: Object,
     required: true,
@@ -59,6 +59,14 @@ defineProps({
 });
 
 defineEmits(["drop"]);
+
+const usersStore = useUsersStore();
+
+const taskUser = computed(() => {
+  return usersStore.users.find((user) => user.id === props.task.userId);
+});
+
+const router = useRouter();
 </script>
 
 <style lang="scss" scoped>

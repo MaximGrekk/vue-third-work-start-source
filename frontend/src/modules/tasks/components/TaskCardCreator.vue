@@ -166,9 +166,22 @@ import { createUUIDv4, createNewDate } from "@/common/helpers";
 import AppButton from "@/common/components/AppButton.vue";
 import { validateFields } from "@/common/validator";
 import { cloneDeep } from "lodash";
-import { useTasksStore } from "@/stores/tasks";
+import { useTasksStore, useTicksStore } from "@/stores";
 
 const tasksStore = useTasksStore();
+const ticksStore = useTicksStore();
+
+async function submitTicks(taskId, ticks) {
+  const promises = ticks.map((tick) => {
+    if (!tick.text) {
+      return;
+    }
+    delete tick.uuid;
+    tick.taskId = taskId;
+    return tick.id ? ticksStore.updateTick(tick) : ticksStore.addTick(tick);
+  });
+  await Promise.all(promises);
+}
 
 const props = defineProps({
   taskToEdit: {
@@ -237,6 +250,7 @@ function removeTick({ uuid, id }) {
   }
   if (id) {
     task.value.ticks = task.value.ticks.filter((tick) => tick.id !== id);
+    ticksStore.deleteTick(id);
   }
 }
 
@@ -255,21 +269,25 @@ watch(
   { deep: true }
 );
 
-function submit() {
+async function submit() {
   // Валидируем задачу
   if (!validateFields(task.value, validations.value)) {
     isFormValid.value = false;
     return;
   }
+  let taskId = task.value.id;
   if (props.taskToEdit) {
     // Редактируемая задача
-    tasksStore.editTask(task.value);
+    await tasksStore.editTask(task.value);
   } else {
     // Новая задача
-    tasksStore.addTask(task.value);
+    const newTask = await tasksStore.addTask(task.value);
+    taskId = newTask.id;
   }
+  // Создать или обновить подзадачи
+  await submitTicks(taskId, task.value.ticks);
   // Переход на главную страницу
-  router.push("/");
+  await router.push("/");
 }
 
 onMounted(() => {

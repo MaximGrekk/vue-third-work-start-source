@@ -11,7 +11,7 @@
 <script setup>
 import CounterValue from "./CounterValue.vue";
 import CounterButton from "./CounterButton.vue";
-import { useCounterStore } from "./store";
+import { useCounterStore } from "../store";
 
 const counterStore = useCounterStore()
 

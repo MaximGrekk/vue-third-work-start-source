@@ -3,9 +3,9 @@
 </template>
 
 <script setup>
-import TaskCardCreator from "../modules/tasks/components/TaskCardCreator.vue";
+import TaskCardCreator from "@/modules/tasks/components/TaskCardCreator.vue";
 import { useRoute, useRouter } from "vue-router";
-import { createNewDate } from "../common/helpers";
+import { createNewDate } from "@/common/helpers";
 import { useTasksStore } from "@/stores";
 
 const tasksStore = useTasksStore();
@@ -14,7 +14,7 @@ const route = useRoute();
 const router = useRouter();
 
 // Находим задачу из массива задач по id из строки URL
-const task = tasksStore.tasks.find((task) => +task.id === +route.params.id);
+const task = tasksStore.getTaskById(route.params.id);
 
 if (task) {
   const taskDate = task.dueDate;

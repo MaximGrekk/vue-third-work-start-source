@@ -11,7 +11,7 @@
         >
           <div class="comments__user">
             <img
-              :src="getImage(comment.user.avatar)"
+              :src="getPublicImage(comment.user.avatar)"
               :alt="comment.user.name"
               width="30"
               height="30"
@@ -43,50 +43,27 @@
 </template>
 
 <script setup>
-import users from "@/mocks/users.json";
-import AppTextarea from "@/common/components/AppTextarea.vue";
-import AppButton from "@/common/components/AppButton.vue";
 import { ref, computed, watch } from "vue";
 import {
   validateFields,
   clearValidationErrors,
 } from "../../../common/validator";
-import { getImage } from "@/common/helpers";
+import AppTextarea from "@/common/components/AppTextarea.vue";
+import AppButton from "@/common/components/AppButton.vue";
+import { getPublicImage } from "@/common/helpers";
+import { useAuthStore, useCommentsStore } from "@/stores";
+
+const authStore = useAuthStore();
+const commentsStore = useCommentsStore();
 
 const props = defineProps({
   taskId: {
     type: Number,
     required: true,
   },
-  comments: {
-    type: Array,
-    default: () => [],
-  },
 });
 
-const emits = defineEmits(["createNewComment"]);
-
-const user = computed(() => users[0]);
-
-const submit = function () {
-  // Проверяем, валидно ли поле комментария
-  if (!validateFields({ newComment }, validations.value)) return;
-  // Создаём объект комментария
-  const comment = {
-    text: newComment.value,
-    taskId: props.taskId,
-    userId: user.value.id,
-    user: {
-      id: user.value.id,
-      name: user.value.name,
-      avatar: user.value.avatar,
-    },
-  };
-  // Отправляем комментарий в родительский компонент
-  emits("createNewComment", comment);
-  // Очищаем поле комментария
-  newComment.value = "";
-};
+defineEmits(["createNewComment"]);
 
 const newComment = ref("");
 const validations = ref({
@@ -96,12 +73,31 @@ const validations = ref({
   },
 });
 
+const user = authStore.user;
+const comments = computed(() => {
+  return commentsStore.getCommentsByTaskId(props.taskId);
+});
 // Отслеживаем значение поля комментария и очищаем ошибку при изменении
 watch(newComment, () => {
   if (validations.value.newComment.error) {
     clearValidationErrors(validations.value);
   }
 });
+
+const submit = async function () {
+  // Проверяем, валидно ли поле комментария
+  if (!validateFields({ newComment }, validations.value)) return;
+  // Создаём объект комментария
+  const comment = {
+    text: newComment.value,
+    taskId: props.taskId,
+    userId: user.id,
+  };
+  // Создаём комментарий
+  await commentsStore.addComment(comment);
+  // Очищаем поле комментария
+  newComment.value = "";
+};
 </script>
 
 <style lang="scss" scoped>
