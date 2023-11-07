@@ -1,15 +1,18 @@
 <template>
-  <div class="counter">
-    <button @click="decrement">-</button>
+  <demo-container>
+    <div class="counter">
+      <button @click="decrement">-</button>
 
-    <span> Current value: {{ count }} </span>
+      <span> Current value: {{ count }} </span>
 
-    <button @click="increment">+</button>
-  </div>
+      <button @click="increment">+</button>
+    </div>
+  </demo-container>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import DemoContainer from "../components/DemoContainer.vue";
 
 const count = ref(0);
 

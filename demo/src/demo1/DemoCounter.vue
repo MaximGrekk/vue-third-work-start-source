@@ -1,15 +1,18 @@
 <template>
-  <div class="counter">
-    <counter-button @action="decrement">-</counter-button>
+  <demo-container>
+    <div class="counter">
+      <counter-button @action="decrement">-</counter-button>
 
-    <counter-value :value="count" />
+      <counter-value :value="count" />
 
-    <counter-button @action="increment">+</counter-button>
-  </div>
+      <counter-button @action="increment">+</counter-button>
+    </div>
+  </demo-container>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import DemoContainer from "../components/DemoContainer.vue";
 import CounterValue from "./CounterValue.vue";
 import CounterButton from "./CounterButton.vue";
 
