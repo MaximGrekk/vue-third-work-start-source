@@ -29,7 +29,11 @@
             :class="`task__status--${task.timeStatus}`"
           />
         </div>
-        <h5 class="task__title" :class="{ 'task__title--first': !task.user }">
+        <h5
+          class="task__title"
+          data-test="task-title"
+          :class="{ 'task__title--first': !task.user }"
+        >
           {{ task.title }}
         </h5>
         <!--        Тэги задачи вынесены в отдельный компонент-->

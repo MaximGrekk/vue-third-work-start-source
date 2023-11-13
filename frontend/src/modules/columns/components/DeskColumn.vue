@@ -3,7 +3,7 @@
   <app-drop class="column" @drop="moveTask">
     <h2 class="column__name">
       <!--      Показывает наименование колонки-->
-      <span v-if="!state.isInputShowed">
+      <span v-if="!state.isInputShowed" data-test="desk-column-title">
         {{ state.columnTitle }}
       </span>
 
@@ -33,7 +33,7 @@
       />
     </h2>
 
-    <div class="column__target-area">
+    <div class="column__target-area" data-test="column-target-area">
       <!--      Вынесли задачи в отдельный компонент-->
       <transition-group name="tasks">
         <div v-for="task in columnTasks" :key="task.id">
